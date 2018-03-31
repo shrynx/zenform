@@ -1,0 +1,28 @@
+// @flow
+import type { ComponentType } from 'react'
+import type {
+  FormProps,
+  FieldProps,
+  FieldArrayProps,
+  FieldObserverProps,
+  FormObserverProps,
+} from './types'
+
+export type {
+  FormProps,
+  FormRenderProps,
+  FieldProps,
+  FieldRenderProps,
+  FieldArrayProps,
+  FieldArrayRenderProps,
+  FieldObserverProps,
+  FieldObserverData,
+  FormObserverData,
+  FormObserverProps,
+} from './types'
+
+declare export var Form: ComponentType<FormProps>
+declare export var Field: ComponentType<FieldProps>
+declare export var FieldArray: ComponentType<FieldArrayProps>
+declare export var FieldObserver: ComponentType<FieldObserverProps>
+declare export var FormObserver: ComponentType<FormObserverProps>
