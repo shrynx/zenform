@@ -163,7 +163,10 @@ class Form extends React.Component<Props, State> {
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = (event?: SyntheticEvent<HTMLFormElement>) => {
+    if (event && typeof event.preventDefault === 'function') {
+      event.preventDefault()
+    }
     const { values } = this.state
     const { onSubmit, validations } = this.props
     this.setState({

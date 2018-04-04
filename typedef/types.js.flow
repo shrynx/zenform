@@ -58,7 +58,7 @@ export type FormProps = {
 
 export type FormRenderProps = {
   values: Object,
-  handleSubmit: () => void,
+  handleSubmit: (event?: SyntheticEvent<HTMLFormElement>) => void,
   resetForm: () => void,
   errors: Object,
   touched: Object,

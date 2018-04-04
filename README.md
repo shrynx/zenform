@@ -74,7 +74,7 @@ This function will have form render props as arguments.
 #### Form Render Props
 
 * `values: Object`
-* `handleSubmit: () => void`
+* `handleSubmit: (event?: SyntheticEvent<HTMLFormElement>) => void`
 * `resetForm: () => void`
 * `errors: Object`
 * `touched: Object`
