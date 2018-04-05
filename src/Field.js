@@ -156,7 +156,11 @@ or a child as a function: <Field>{() => <Component />}</Field>`
     )
 
     if (component) {
-      return React.createElement(component, { ...input, children, ...restProps })
+      if (typeof component === 'string') {
+        return React.createElement(component, { ...input, children, ...restProps })
+      }
+
+      return React.createElement(component, { ...input, meta, children, ...restProps })
     }
 
     if (render && isFunction(render)) {
