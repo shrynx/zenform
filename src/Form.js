@@ -4,7 +4,7 @@ import { equals } from 'ramda'
 import warning from 'warning'
 import { ZenFormProvider } from './ZenFormContext'
 import { setIn, isPromise, isFunction, setNestedValues } from './utils'
-import type { FormProps as Props, ZenFormContext, FormRenderProps } from '../typedef/types.js.flow'
+import type { FormProps as Props, ZenFormContext, FormRenderProps, FormActions } from '../typedef/types.js.flow'
 
 type State = {
   values: Object,
@@ -178,7 +178,7 @@ class Form extends React.Component<Props, State> {
         maybePromisedErrors.then(
           () => {
             this.setState({ errors: {} })
-            onSubmit(values)
+            onSubmit(values, this.getFormActions())
           },
           errors =>
             this.setState({ errors, touched: setNestedValues(errors, true), isSubmitting: false })
@@ -192,16 +192,33 @@ class Form extends React.Component<Props, State> {
         })
 
         if (isValid) {
-          onSubmit(values)
+          onSubmit(values, this.getFormActions())
         }
       }
     } else {
-      onSubmit(values)
+      onSubmit(values, this.getFormActions())
     }
   }
 
   resetForm = () => {
     this.setState(this.initialState)
+  }
+
+  getFormActions = (): FormActions => {
+    return {
+      setFieldValue: this.setFieldValue,
+      setMultipleFieldValues: this.setMultipleFieldValues,
+      setFieldError: this.setFieldError,
+      setMultipleFieldErrors: this.setMultipleFieldErrors,
+      setFieldTouched: this.setFieldTouched,
+      setMultipleFieldTouched: this.setMultipleFieldTouched,
+      setFieldData: this.setFieldData,
+      setMultipleFieldData: this.setMultipleFieldData,
+      setActiveField: this.setActiveField,
+      setZenFormState: this.setZenFormState,
+      runValidations: this.runValidations,
+      resetForm: this.resetForm,
+    }
   }
 
   render() {

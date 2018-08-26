@@ -49,7 +49,7 @@ export type ZenFormContext = {
 } & FieldUpdateActions
 
 export type FormProps = {
-  onSubmit: (value: Object) => void,
+  onSubmit: (value: Object, actions: FormActions) => void,
   initialValues?: Object,
   validations?: (values: Object) => void | Object | Promise<*>,
   validateOnChange?: boolean,
@@ -178,4 +178,10 @@ export type FormObserverAuxProps = {
 
 export type FormObserverProps = {
   onChange?: (args: FormObserverData) => void,
+}
+
+export type FormActions = FieldUpdateActions & {
+  setZenFormState: (s: any, cb?: () => void) => void,
+  runValidations: (values: Object) => void,
+  resetForm: () => void,
 }
