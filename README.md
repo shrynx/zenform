@@ -62,7 +62,7 @@ Form is top most component, all other components should be its child.
 
 #### Form Props
 
-* `onSubmit: (value: Object) => void`
+* `onSubmit: (value: Object, actions: FormActions ) => void`
 * `initialValues?: Object`
 * `validations?: (values: Object) => void | Object | Promise<*>`
 * `validateOnChange?: boolean`
