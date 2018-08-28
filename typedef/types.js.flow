@@ -184,4 +184,5 @@ export type FormActions = FieldUpdateActions & {
   setZenFormState: (s: any, cb?: () => void) => void,
   runValidations: (values: Object) => void,
   resetForm: () => void,
+  setSubmitting: (boolean) => void,
 }

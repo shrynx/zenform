@@ -145,6 +145,10 @@ class Form extends React.Component<Props, State> {
     this.setState(newState, callback)
   }
 
+  setSubmitting = (isSubmitting: boolean) => {
+    this.setState({ isSubmitting })
+  }
+
   runValidations = (values: any) => {
     const { validations } = this.props
 
@@ -218,6 +222,7 @@ class Form extends React.Component<Props, State> {
       setZenFormState: this.setZenFormState,
       runValidations: this.runValidations,
       resetForm: this.resetForm,
+      setSubmitting: this.setSubmitting
     }
   }
 
