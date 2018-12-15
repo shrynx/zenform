@@ -56,11 +56,12 @@ export type FormActions = FieldUpdateActions & {
 }
 
 export type FormProps = {
-  onSubmit: (value: Object, actions: FormActions) => void,
+  onSubmit: ({ values: Object, changeSet: Object, formActions: FormActions }) => void,
   initialValues?: Object,
   validations?: (values: Object) => void | Object | Promise<*>,
   validateOnChange?: boolean,
   validateOnBlur?: boolean,
+  enableChangeSetWith?: Array<{ field: string, id: string }>,
 } & RenderableProps<*>
 
 export type FormRenderProps = {
@@ -74,6 +75,7 @@ export type FormRenderProps = {
   isDirty: boolean,
   isInvalid: boolean,
   initialValues: Object,
+  changeSet: ?Object,
 } & FieldUpdateActions
 
 export type FieldProps = {

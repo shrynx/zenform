@@ -3,8 +3,13 @@ import * as React from 'react'
 import { equals } from 'ramda'
 import warning from 'warning'
 import { ZenFormProvider } from './ZenFormContext'
-import { setIn, isPromise, isFunction, setNestedValues } from './utils'
-import type { FormProps as Props, ZenFormContext, FormRenderProps, FormActions } from '../typedef/types.js.flow'
+import { setIn, isPromise, isFunction, setNestedValues, getChangeSet, getIn } from './utils'
+import type {
+  FormProps as Props,
+  ZenFormContext,
+  FormRenderProps,
+  FormActions,
+} from '../typedef/types.js.flow'
 
 type State = {
   values: Object,
@@ -173,6 +178,7 @@ class Form extends React.Component<Props, State> {
     }
     const { values } = this.state
     const { onSubmit, validations } = this.props
+    const { getChangeSet } = this
     this.setState({
       isSubmitting: true,
     })
@@ -182,7 +188,8 @@ class Form extends React.Component<Props, State> {
         maybePromisedErrors.then(
           () => {
             this.setState({ errors: {} })
-            onSubmit(values, this.getFormActions())
+            const changeSet = getChangeSet()
+            onSubmit({ values, changeSet, formActions: this.getFormActions() })
           },
           errors =>
             this.setState({ errors, touched: setNestedValues(errors, true), isSubmitting: false })
@@ -196,16 +203,34 @@ class Form extends React.Component<Props, State> {
         })
 
         if (isValid) {
-          onSubmit(values, this.getFormActions())
+          const changeSet = getChangeSet()
+          onSubmit({ values, changeSet, formActions: this.getFormActions() })
         }
       }
     } else {
-      onSubmit(values, this.getFormActions())
+      const changeSet = getChangeSet()
+      onSubmit({ values, changeSet, formActions: this.getFormActions() })
     }
   }
 
   resetForm = () => {
     this.setState(this.initialState)
+  }
+
+  getChangeSet = () => {
+    const { values } = this.state
+    const { enableChangeSetWith } = this.props
+    const { initialValues } = this
+
+    return enableChangeSetWith
+      ? enableChangeSetWith.reduce(
+          (acc, { field, id }) => ({
+            ...acc,
+            [field]: getChangeSet(getIn(initialValues, field), getIn(values, field), id),
+          }),
+          {}
+        )
+      : {}
   }
 
   getFormActions = (): FormActions => {
@@ -222,13 +247,12 @@ class Form extends React.Component<Props, State> {
       setZenFormState: this.setZenFormState,
       runValidations: this.runValidations,
       resetForm: this.resetForm,
-      setSubmitting: this.setSubmitting
+      setSubmitting: this.setSubmitting,
     }
   }
 
   render() {
     const { values, errors, touched, activeField, data } = this.state
-
     const {
       setFieldValue,
       setMultipleFieldValues,
@@ -243,10 +267,13 @@ class Form extends React.Component<Props, State> {
       setZenFormState,
       handleSubmit,
       resetForm,
+      getChangeSet,
     } = this
 
     const isDirty: boolean = !equals(values, initialValues)
     const isInvalid: boolean = Object.keys(errors).length !== 0
+
+    const changeSet = getChangeSet()
 
     const contextValues: ZenFormContext = {
       values,
@@ -286,6 +313,7 @@ class Form extends React.Component<Props, State> {
       isDirty,
       isInvalid,
       initialValues,
+      changeSet,
     }
 
     const { render, children } = this.props
